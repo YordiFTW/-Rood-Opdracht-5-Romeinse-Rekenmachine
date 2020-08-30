@@ -1,0 +1,202 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace RomanCalc4
+{
+    public partial class Form1 : Form
+    {
+        bool operation_pressed = false;
+        
+        int calc1;
+        int calc2;
+        int result1;
+        string opperator;
+
+        public Form1()
+        {
+            InitializeComponent();
+            
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Button b = (Button)sender;
+            opperator = b.Text;
+            string num1 = result.Text; // slaat eerste resultaat op als string
+          calc1 = (ConvertNumerals1(num1));
+
+            label1.Text = num1 + " " + opperator;
+            
+
+            result.Clear();
+
+            //string roman1 = result.Text;
+            //int num1 = (ConvertNumerals1(roman1));
+            //int toArabic = (num1);
+            //string arabic1 = ArabicToRoman(toArabic);
+
+        }
+
+        public static int ConvertNumerals1(string roman)
+        {
+            int outVal = 0;
+            roman = roman.ToUpper();
+            for (int i = 0; i < roman.Length; i++)
+            {
+                char character = roman[i];
+
+                if (i != roman.Length - 1 && GetRomanValue(roman[i]) < GetRomanValue(roman[i + 1]))
+                {
+                    outVal += GetRomanValue(roman[i + 1]) - GetRomanValue(roman[i]);
+                    i++;
+                    continue;
+                }
+                else
+                {
+                    outVal += GetRomanValue(roman[i]);
+                }
+            }
+
+            return outVal;
+
+        }
+        public static int GetRomanValue(char val)
+        {
+            switch (val)
+            {
+                case 'I':
+                    return (int)RomanNumerals.I;
+                case 'V':
+                    return (int)RomanNumerals.V;
+                case 'X':
+                    return (int)RomanNumerals.X;
+                case 'L':
+                    return (int)RomanNumerals.L;
+                case 'C':
+                    return (int)RomanNumerals.C;
+                case 'D':
+                    return (int)RomanNumerals.D;
+                case 'M':
+                    return (int)RomanNumerals.M;
+                default:
+                    return 0;
+            }
+        }
+        enum RomanNumerals
+        {
+            I = 1,
+            V = 5,
+            X = 10,
+            L = 50,
+            C = 100,
+            D = 500,
+            M = 1000,
+        }
+
+        public static string[] ThouLetters = { "", "M", "MM", "MMM" };
+        public static string[] HundLetters =
+            { "", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM" };
+        public static string[] TensLetters =
+            { "", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC" };
+        public static string[] OnesLetters =
+            { "", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX" };
+
+
+        // Convert Roman numerals to an integer.
+        public static string ArabicToRoman(int arabic)
+        {
+            // See if it's >= 3000.
+            if (arabic >= 3000)
+            {
+                // Use parentheses.
+                int thou = arabic / 1000;
+                arabic %= 1000;
+                return "(" + ArabicToRoman(thou) + ")" +
+                    ArabicToRoman(arabic);
+            }
+
+            // Otherwise process the letters.
+            string result = "";
+
+            // Pull out thousands.
+            int num;
+            num = arabic / 1000;
+            result += ThouLetters[num];
+            arabic %= 1000;
+
+            // Handle hundreds.
+            num = arabic / 100;
+            result += HundLetters[num];
+            arabic %= 100;
+
+            // Handle tens.
+            num = arabic / 10;
+            result += TensLetters[num];
+            arabic %= 10;
+
+            // Handle ones.
+            result += OnesLetters[arabic];
+
+            return result;
+        }
+
+        public void button(object sender, EventArgs e)
+        {
+            Button b = (Button)sender;
+            result.Text = result.Text + b.Text;
+            
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            label1.Text = "";
+            string num1 = result.Text; // slaat eerste resultaat op als string
+            calc2 = (ConvertNumerals1(num1)); // zet Roman input string om naar int nummer
+            if (opperator == "/")
+            {
+                result1 = (calc1) / (calc2);
+                string arabic1 = ArabicToRoman(result1);
+                result.Text = (arabic1).ToString();
+            }
+            if (opperator == "+")
+            {
+                result1 = (calc1) + (calc2);
+                string arabic1 = ArabicToRoman(result1);
+                result.Text = (arabic1).ToString();
+            }
+            if (opperator == "-")
+            {
+                result1 = (calc1) - (calc2);
+                string arabic1 = ArabicToRoman(result1);
+                result.Text = (arabic1).ToString();
+            }
+            if (opperator == "*")
+            {
+                result1 = (calc1) * (calc2);
+                string arabic1 = ArabicToRoman(result1);
+                result.Text = (arabic1).ToString();
+            }
+        }
+
+        private void button22_Click(object sender, EventArgs e)
+        {
+            result.Text = "";
+        }
+
+        private void button17_Click(object sender, EventArgs e)
+        {
+            result.Text = "";
+            calc1 = 0;
+            calc2 = 0;
+            label1.Text = "";
+        }
+    }
+}
